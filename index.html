@@ -6,17 +6,21 @@
     <title>EliXTech Central</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Firebase SDKs (Stabilste Version für Browser) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <style>
+        .app-card:hover .app-icon { transform: scale(1.1) rotate(-5deg); }
+        .gradient-text { background: linear-gradient(90deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
 </head>
 <body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
 
     <!-- Login Maske -->
     <div id="auth-card" class="bg-slate-800 p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-slate-700">
         <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/20">
                 <span class="text-2xl font-black">EX</span>
             </div>
             <h1 class="text-3xl font-black tracking-tight">EliXTech <span class="text-indigo-500">ID</span></h1>
@@ -37,28 +41,67 @@
     </div>
 
     <!-- App Dashboard -->
-    <div id="dashboard" class="hidden w-full max-w-4xl">
-        <header class="flex justify-between items-center mb-10">
+    <div id="dashboard" class="hidden w-full max-w-5xl w-full">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
             <div>
                 <h1 class="text-4xl font-black italic tracking-tighter">EliXTech <span class="text-indigo-500">Portal</span></h1>
-                <p id="user-welcome" class="text-slate-400 font-medium"></p>
+                <p id="user-welcome" class="text-slate-400 font-medium mt-1">Lade Profil...</p>
             </div>
-            <button onclick="logout()" class="bg-rose-500/10 text-rose-500 border border-rose-500/20 px-6 py-2 rounded-xl font-bold hover:bg-rose-500 hover:text-white transition-all">Abmelden</button>
+            
+            <div class="flex items-center gap-4 bg-slate-800/50 p-2 pr-6 rounded-2xl border border-slate-700">
+                <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-inner" id="user-initials">?</div>
+                <div class="hidden sm:block">
+                    
+                </div>
+                <button onclick="logout()" class="ml-4 text-slate-400 hover:text-rose-400 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Focus Flow Link -->
-            <a href="https://eliga99.github.io/Focus-Flow-/" class="bg-slate-800 p-8 rounded-[2rem] border border-slate-700 hover:border-indigo-500 hover:shadow-2xl transition-all group">
-                <div class="text-5xl mb-6 group-hover:scale-110 transition-transform"><img src="Copilot_20260331_183952.png" alt=""></div>
-                <h2 class="text-2xl font-bold mb-2">Focus Flow+</h2>
-                <p class="text-slate-400 text-sm leading-relaxed">Dein smarter Quest-Planner. Automatische Synchronisation mit deiner Datenbank.</p>
-                <div class="mt-6 flex items-center text-indigo-400 font-bold text-sm uppercase tracking-widest">
-                    App öffnen <span class="ml-2">→</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Focus Flow Card -->
+            <a href="https://eliga99.github.io/Focus-Flow-" class="app-card bg-slate-800 p-8 rounded-[2.5rem] border border-slate-700 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all flex flex-col h-full group">
+                <div class="app-icon w-20 h-20 bg-white rounded-3xl mb-8 flex items-center justify-center overflow-hidden shadow-xl transition-transform duration-500">
+                    <img src="Copilot_20260331_183952.png" alt="" class="" onerror="this.innerHTML='🎯'; this.style.fontSize='2.5rem'">
+                </div>
+                <div class="flex-grow">
+                    <h2 class="text-2xl font-bold mb-3 group-hover:text-indigo-400 transition-colors">Focus Flow+</h2>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">Smarter Quest-Planner für maximale Produktivität. Deine Daten synchronisieren live mit der Cloud.</p>
+                </div>
+                <div class="flex items-center justify-between mt-auto">
+                    <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full font-bold uppercase tracking-widest">Installiert</span>
+                    <div class="text-indigo-500 font-bold flex items-center text-sm group-hover:translate-x-1 transition-transform"> Öffnen<span class="ml-2">→</span>
+                    </div>
                 </div>
             </a>
 
-            <div class="bg-slate-800/40 p-8 rounded-[2rem] border border-slate-700 border-dashed flex flex-col items-center justify-center text-slate-600">
-                <p class="font-bold italic uppercase">Weitere Apps folgen</p>
+            <!-- Placeholder Card -->
+            <div class="bg-slate-800/30 p-8 rounded-[2.5rem] border border-slate-700 border-dashed flex flex-col items-center justify-center text-center group min-h-[300px]">
+                <div class="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">🚀</div>
+                <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">Nächste App in Arbeit</p>
+                <p class="text-slate-600 text-xs mt-2 max-w-[200px]">Wir entwickeln ständig neue Tools für dein EliXTech Ökosystem.</p>
+            </div>
+
+            <!-- News/Quick Info Card -->
+            <div class="bg-gradient-to-br from-indigo-900/40 to-slate-800 p-8 rounded-[2.5rem] border border-indigo-500/20">
+                <h3 class="text-lg font-bold mb-4">System Status</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <p class="text-xs text-slate-300 font-medium">Cloud Sync: Online</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        <p class="text-xs text-slate-300 font-medium">Core Engine: v2.5 Stable</p>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-700">
+                        <p class="text-[10px] text-slate-500 leading-relaxed uppercase font-bold">Zuletzt aktualisiert</p>
+                        <p id="last-login" class="text-xs text-indigo-400 font-mono">--:--:--</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -74,7 +117,6 @@
             appId: "1:435055443177:web:70faab26bb8dd2aae2c478"
         };
 
-        // Initialisierung
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
@@ -90,7 +132,6 @@
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
             if(!e || !p) return showError("Bitte alles ausfüllen!");
-            
             auth.signInWithEmailAndPassword(e, p).catch(err => showError("Login fehlgeschlagen: " + err.message));
         }
 
@@ -100,24 +141,50 @@
             if(!e || !p) return showError("Bitte alles ausfüllen!");
 
             auth.createUserWithEmailAndPassword(e, p).then(res => {
-                // Erstellt den ersten Eintrag in der Datenbank
                 db.ref('users/' + res.user.uid).set({
-                    profile: { name: e.split('@')[0], email: e },
-                    apps: { focusFlow: { stats: { lifetimeSeconds: 0 } } }
+                    profile: { 
+                        name: e.split('@')[0], 
+                        email: e,
+                        joined: Date.now()
+                    },
+                    apps: { 
+                        focusFlow: { 
+                            stats: { lifetimeSeconds: 0 } 
+                        } 
+                    }
                 });
             }).catch(err => showError("Registrierung fehlgeschlagen: " + err.message));
         }
 
         function logout() { auth.signOut(); }
 
-        // Beobachtet ob jemand eingeloggt ist
+        // Live-Profil Synchronisation
+        function syncProfile(uid) {
+            const userRef = db.ref('users/' + uid);
+            
+            userRef.on('value', snapshot => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                const name = data.profile?.name || "User";
+                const focusSeconds = data.apps?.focusFlow?.stats?.lifetimeSeconds || 0;
+                
+                // UI Updates
+                document.getElementById('user-welcome').innerText = `Willkommen zurück, ${name}!`;
+                document.getElementById('user-initials').innerText = name.substring(0, 2).toUpperCase();
+                document.getElementById('total-stats').innerText = `${Math.floor(focusSeconds / 60)}m ${focusSeconds % 60}s`;
+                document.getElementById('last-login').innerText = new Date().toLocaleTimeString();
+            });
+        }
+
         auth.onAuthStateChanged(user => {
             const card = document.getElementById('auth-card');
             const dash = document.getElementById('dashboard');
+            
             if (user) {
                 card.classList.add('hidden');
                 dash.classList.remove('hidden');
-                document.getElementById('user-welcome').innerText = `Hallo, ${user.email}`;
+                syncProfile(user.uid);
             } else {
                 card.classList.remove('hidden');
                 dash.classList.add('hidden');
