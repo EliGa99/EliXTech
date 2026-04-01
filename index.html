@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliXTech Central</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Firebase SDKs (Stabilste Version für Browser) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
+
+    <!-- Login Maske -->
+    <div id="auth-card" class="bg-slate-800 p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-slate-700">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span class="text-2xl font-black">EX</span>
+            </div>
+            <h1 class="text-3xl font-black tracking-tight">EliXTech <span class="text-indigo-500">ID</span></h1>
+            <p class="text-slate-400 text-sm mt-2">Ein Login. Alle Apps.</p>
+        </div>
+
+        <div class="space-y-4">
+            <input type="email" id="email" placeholder="E-Mail" class="w-full bg-slate-700 border-none rounded-2xl p-4 outline-none focus:ring-2 focus:ring-indigo-500 transition text-white">
+            <input type="password" id="password" placeholder="Passwort (min. 6 Zeichen)" class="w-full bg-slate-700 border-none rounded-2xl p-4 outline-none focus:ring-2 focus:ring-indigo-500 transition text-white">
+            
+            <div id="error-msg" class="text-rose-400 text-xs font-bold text-center hidden"></div>
+
+            <div class="flex gap-3 pt-2">
+                <button onclick="login()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 py-4 rounded-2xl font-bold transition active:scale-95">Login</button>
+                <button onclick="register()" class="flex-1 bg-slate-600 hover:bg-slate-500 py-4 rounded-2xl font-bold transition active:scale-95">Registrieren</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Dashboard -->
+    <div id="dashboard" class="hidden w-full max-w-4xl">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-4xl font-black italic tracking-tighter">EliXTech <span class="text-indigo-500">Portal</span></h1>
+                <p id="user-welcome" class="text-slate-400 font-medium"></p>
+            </div>
+            <button onclick="logout()" class="bg-rose-500/10 text-rose-500 border border-rose-500/20 px-6 py-2 rounded-xl font-bold hover:bg-rose-500 hover:text-white transition-all">Abmelden</button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Focus Flow Link -->
+            <a href="focus_flow.html" class="bg-slate-800 p-8 rounded-[2rem] border border-slate-700 hover:border-indigo-500 hover:shadow-2xl transition-all group">
+                <div class="text-5xl mb-6 group-hover:scale-110 transition-transform"><img src="Copilot_20260331_183952.png" alt=""></div>
+                <h2 class="text-2xl font-bold mb-2">Focus Flow+</h2>
+                <p class="text-slate-400 text-sm leading-relaxed">Dein smarter Quest-Planner. Automatische Synchronisation mit deiner Datenbank.</p>
+                <div class="mt-6 flex items-center text-indigo-400 font-bold text-sm uppercase tracking-widest">
+                    App öffnen <span class="ml-2">→</span>
+                </div>
+            </a>
+
+            <div class="bg-slate-800/40 p-8 rounded-[2rem] border border-slate-700 border-dashed flex flex-col items-center justify-center text-slate-600">
+                <p class="font-bold italic uppercase">Weitere Apps folgen</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAYVCDAIlFnHhMr2sdeKruFoNW68MBro9Y",
+            authDomain: "elixtech.firebaseapp.com",
+            databaseURL: "https://elixtech-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "elixtech",
+            storageBucket: "elixtech.firebasestorage.app",
+            messagingSenderId: "435055443177",
+            appId: "1:435055443177:web:70faab26bb8dd2aae2c478"
+        };
+
+        // Initialisierung
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        function showError(msg) {
+            const errDiv = document.getElementById('error-msg');
+            errDiv.innerText = msg;
+            errDiv.classList.remove('hidden');
+            setTimeout(() => errDiv.classList.add('hidden'), 5000);
+        }
+
+        function login() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            if(!e || !p) return showError("Bitte alles ausfüllen!");
+            
+            auth.signInWithEmailAndPassword(e, p).catch(err => showError("Login fehlgeschlagen: " + err.message));
+        }
+
+        function register() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            if(!e || !p) return showError("Bitte alles ausfüllen!");
+
+            auth.createUserWithEmailAndPassword(e, p).then(res => {
+                // Erstellt den ersten Eintrag in der Datenbank
+                db.ref('users/' + res.user.uid).set({
+                    profile: { name: e.split('@')[0], email: e },
+                    apps: { focusFlow: { stats: { lifetimeSeconds: 0 } } }
+                });
+            }).catch(err => showError("Registrierung fehlgeschlagen: " + err.message));
+        }
+
+        function logout() { auth.signOut(); }
+
+        // Beobachtet ob jemand eingeloggt ist
+        auth.onAuthStateChanged(user => {
+            const card = document.getElementById('auth-card');
+            const dash = document.getElementById('dashboard');
+            if (user) {
+                card.classList.add('hidden');
+                dash.classList.remove('hidden');
+                document.getElementById('user-welcome').innerText = `Hallo, ${user.email}`;
+            } else {
+                card.classList.remove('hidden');
+                dash.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
