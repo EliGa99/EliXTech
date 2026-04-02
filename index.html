@@ -3,57 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EliXTech Central</title>
+    <title>EliXTech Central | Dev-Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Compatibility Mode) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <style>
-        .app-card:hover .app-icon { transform: scale(1.1) rotate(-5deg); }
-        .gradient-text { background: linear-gradient(90deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .app-card {
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .app-card:hover {
+            transform: translateY(-12px) scale(1.01);
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        /* Coole Galerie Animation */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            aspect-ratio: 4/3;
+            transition: all 0.5s ease;
+        }
+
+        .gallery-container:hover .gallery-item:not(:hover) {
+            filter: grayscale(0.8) blur(2px);
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+
+        /* Background Effects */
+        .glow {
+            position: fixed;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(2, 6, 23, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .input-field {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="glow" style="top: -20%; left: -20%;"></div>
+    <div class="glow" style="bottom: -20%; right: -20%;"></div>
 
     <!-- Login Maske -->
-    <div id="auth-card" class="bg-slate-800 p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-slate-700">
-        <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/20">
-                <span class="text-2xl font-black">EX</span>
-            </div>
-            <h1 class="text-3xl font-black tracking-tight">EliXTech <span class="text-indigo-500">ID</span></h1>
-            <p class="text-slate-400 text-sm mt-2">Ein Login. Alle Apps.</p>
+    <div id="auth-card" class="glass-card p-10 rounded-[3rem] w-full max-w-md text-center">
+        <div class="mb-12 max-w-2xl">
+            <h2 class="text-2xl font-bold mb-4 text-indigo-300">Was macht EliXTech</h2>
+            <p class="text-slate-400 leading-relaxed">
+                EliXTech entwickelt <span class="text-white font-bold">Lern-Apps</span>, die Schülern und Studenten helfen, produktiver zu arbeiten-
+            </p>
         </div>
+        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-indigo-500/30">
+            <span class="text-3xl font-black italic">EX</span>
+        </div>
+        <h1 class="text-4xl font-extrabold tracking-tighter mb-2">EliXTech <span class="text-indigo-400">ID</span></h1>
+        <p class="text-slate-400 mb-8 font-medium">Ein Account für alle EliXTech Apps</p>
 
-        <div class="space-y-4">
-            <input type="email" id="email" placeholder="E-Mail" class="w-full bg-slate-700 border-none rounded-2xl p-4 outline-none focus:ring-2 focus:ring-indigo-500 transition text-white">
-            <input type="password" id="password" placeholder="Passwort (min. 6 Zeichen)" class="w-full bg-slate-700 border-none rounded-2xl p-4 outline-none focus:ring-2 focus:ring-indigo-500 transition text-white">
+        <div class="space-y-4 text-left">
+            <div class="space-y-1">
+                <label class="text-[10px] uppercase tracking-widest font-bold text-slate-500 ml-2">E-Mail Adresse</label>
+                <input type="email" id="email" class="input-field w-full rounded-2xl p-4 outline-none">
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] uppercase tracking-widest font-bold text-slate-500 ml-2">Passwort</label>
+                <input type="password" id="password" class="input-field w-full rounded-2xl p-4 outline-none">
+            </div>
             
-            <div id="error-msg" class="text-rose-400 text-xs font-bold text-center hidden"></div>
+            <div id="error-msg" class="bg-rose-500/10 text-rose-400 text-xs py-3 rounded-xl text-center hidden"></div>
 
-            <div class="flex gap-3 pt-2">
-                <button onclick="login()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 py-4 rounded-2xl font-bold transition active:scale-95">Login</button>
-                <button onclick="register()" class="flex-1 bg-slate-600 hover:bg-slate-500 py-4 rounded-2xl font-bold transition active:scale-95">Registrieren</button>
+            <div class="flex flex-col gap-3 pt-4">
+                <button onclick="login()" class="bg-indigo-600 hover:bg-indigo-500 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-600/20 transition-all active:scale-95">Login</button>
+                <button onclick="register()" class="text-slate-500 text-xs font-semibold hover:text-slate-300 transition-colors">Noch kein Account? Jetzt beitreten</button>
             </div>
         </div>
     </div>
 
     <!-- App Dashboard -->
-    <div id="dashboard" class="hidden w-full max-w-5xl w-full">
+    <div id="dashboard" class="hidden w-full max-w-6xl py-8">
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
             <div>
-                <h1 class="text-4xl font-black italic tracking-tighter">EliXTech <span class="text-indigo-500">Portal</span></h1>
-                <p id="user-welcome" class="text-slate-400 font-medium mt-1">Lade Profil...</p>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-indigo-500/20 text-indigo-400 text-[10px] font-black px-3 py-1 rounded-full tracking-widest uppercase">Live-Sync</span>
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+                </div>
+                <h1 class="text-5xl font-black italic tracking-tighter mb-2">EliXTech <span class="text-indigo-500">ID</span></h1>
+                <p id="user-welcome" class="text-slate-400 text-lg font-medium italic"></p>
             </div>
             
-            <div class="flex items-center gap-4 bg-slate-800/50 p-2 pr-6 rounded-2xl border border-slate-700">
-                <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-inner" id="user-initials">?</div>
-                <div class="hidden sm:block">
-                    
-                </div>
-                <button onclick="logout()" class="ml-4 text-slate-400 hover:text-rose-400 transition-colors">
+            <div class="flex items-center gap-4 bg-slate-800/40 p-3 pr-8 rounded-3xl border border-slate-700/50 glass-card">
+                <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center font-black text-xl" id="user-initials">EX</div>
+                <button onclick="logout()" class="text-slate-400 hover:text-rose-400 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
@@ -61,61 +165,100 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Focus Flow Card -->
-            <a href="https://eliga99.github.io/Focus-Flow-" class="app-card bg-slate-800 p-8 rounded-[2.5rem] border border-slate-700 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all flex flex-col h-full group">
-                <div class="app-icon w-20 h-20 bg-white rounded-3xl mb-8 flex items-center justify-center overflow-hidden shadow-xl transition-transform duration-500">
-                    <img src="Copilot_20260331_183952.png" alt="" class="" onerror="this.innerHTML='🎯'; this.style.fontSize='2.5rem'">
-                </div>
-                <div class="flex-grow">
-                    <h2 class="text-2xl font-bold mb-3 group-hover:text-indigo-400 transition-colors">Focus Flow+</h2>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-6">Smarter Quest-Planner für maximale Produktivität. Deine Daten synchronisieren live mit der Cloud.</p>
-                </div>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full font-bold uppercase tracking-widest">Installiert</span>
-                    <div class="text-indigo-500 font-bold flex items-center text-sm group-hover:translate-x-1 transition-transform"> Öffnen<span class="ml-2">→</span>
-                    </div>
-                </div>
-            </a>
-            <a href="https://eliga99.github.io/StudyBuddy" class="app-card bg-slate-800 p-8 rounded-[2.5rem] border border-slate-700 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all flex flex-col h-full group">
-                <div class="app-icon w-20 h-20 bg-white rounded-3xl mb-8 flex items-center justify-center overflow-hidden shadow-xl transition-transform duration-500">
-                    <img src="ChatGPT Image Apr 2, 2026, 12_47_23 PM.png" alt="" class="" onerror="this.innerHTML='🎯'; this.style.fontSize='2.5rem'">
-                </div>
-                <div class="flex-grow">
-                    <h2 class="text-2xl font-bold mb-3 group-hover:text-indigo-400 transition-colors">StudyBuddy Pro</h2>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-6">Smarter AI Text zusammenfasser, mit daten speicherung</p>
-                </div>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full font-bold uppercase tracking-widest">Installiert</span>
-                    <div class="text-indigo-500 font-bold flex items-center text-sm group-hover:translate-x-1 transition-transform"> Öffnen<span class="ml-2">→</span>
-                    </div>
-                </div>
-            </a>
+        <!-- Intro Text -->
 
-            <!-- Placeholder Card -->
-            <div class="bg-slate-800/30 p-8 rounded-[2.5rem] border border-slate-700 border-dashed flex flex-col items-center justify-center text-center group min-h-[300px]">
-                <div class="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">🚀</div>
-                <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">Nächste App in Arbeit</p>
-                <p class="text-slate-600 text-xs mt-2 max-w-[200px]">Wir entwickeln ständig neue Tools für dein EliXTech Ökosystem.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            
+            <!-- App Card: Focus Flow -->
+            <div class="app-card glass-card p-8 rounded-[3.5rem] flex flex-col group overflow-hidden">
+                <div class="flex justify-between items-start mb-8">
+                    <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center overflow-hidden shadow-2xl transition-all group-hover:scale-110">
+                        <img src="Copilot_20260331_183952.png" alt="Focus Flow" class="w-full h-full object-cover" onerror="this.src='https://api.dicebear.com/7.x/shapes/svg?seed=ff'">
+                    </div>
+                    <a href="https://eliga99.github.io/Focus-Flow-" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white p-5 rounded-3xl transition-all shadow-xl shadow-indigo-600/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+                
+                <div class="mb-6">
+                    <h2 class="text-3xl font-black mb-2">Focus Flow+</h2>
+                    <p class="text-slate-400 text-sm leading-relaxed">Dein ultimativer Begleiter für Deep Work. Mit integriertem Quest-System und Echtzeit-Statistiken.</p>
+                </div>
+
+                <!-- Gallery Section -->
+                <div class="space-y-4">
+                    <h3 class="text-[10px] uppercase tracking-widest font-black text-indigo-400">Projektschritte & Screenshots</h3>
+                    <div class="gallery-container">
+                        <div class="gallery-item">
+                            <img src="https://picsum.photos/seed/code1/400/300" class="w-full h-full object-cover">
+                            
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://picsum.photos/seed/code2/400/300" class="w-full h-full object-cover">
+                            
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://picsum.photos/seed/code3/400/300" class="w-full h-full object-cover">
+                            
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- News/Quick Info Card -->
-            <div class="bg-gradient-to-br from-indigo-900/40 to-slate-800 p-8 rounded-[2.5rem] border border-indigo-500/20">
-                <h3 class="text-lg font-bold mb-4">System Status</h3>
+            <!-- App Card: StudyBuddy -->
+            <div class="app-card glass-card p-8 rounded-[3.5rem] flex flex-col group overflow-hidden">
+                <div class="flex justify-between items-start mb-8">
+                    <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center overflow-hidden shadow-2xl transition-all group-hover:scale-110">
+                        <img src="ChatGPT Image Apr 2, 2026, 12_47_23 PM.png" alt="StudyBuddy" class="w-full h-full object-cover" onerror="this.src='https://api.dicebear.com/7.x/shapes/svg?seed=sb'">
+                    </div>
+                    <a href="https://eliga99.github.io/StudyBuddy" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white p-5 rounded-3xl transition-all shadow-xl shadow-indigo-600/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+                
+                <div class="mb-6">
+                    <h2 class="text-3xl font-black mb-2">StudyBuddy Pro</h2>
+                    <p class="text-slate-400 text-sm leading-relaxed">KI-gestützte Zusammenfassungen. Wandelt stundenlange Vorlesungen in Minuten-Notizen um.</p>
+                </div>
+
+                <!-- Gallery Section -->
                 <div class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                        <p class="text-xs text-slate-300 font-medium">Cloud Sync: Online</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <p class="text-xs text-slate-300 font-medium">Core Engine: v2.5 Stable</p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-700">
-                        <p class="text-[10px] text-slate-500 leading-relaxed uppercase font-bold">Zuletzt aktualisiert</p>
-                        <p id="last-login" class="text-xs text-indigo-400 font-mono">--:--:--</p>
+                    <h3 class="text-[10px] uppercase tracking-widest font-black text-indigo-400">Projektschritte & Screenshots</h3>
+                    <div class="gallery-container">
+                        <div class="gallery-item">
+                            <img src="https://picsum.photos/seed/ai1/400/300" class="w-full h-full object-cover">
+                            
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://picsum.photos/seed/ai2/400/300" class="w-full h-full object-cover">
+                            
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://picsum.photos/seed/ai3/400/300" class="w-full h-full object-cover">
+                            
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Footer Info -->EU-West
+            <div class="glass-card p-8 rounded-[3rem] col-span-1 lg:col-span-2 flex flex-col md:flex-row justify-between items-center border-t-2 border-indigo-500/20">
+                <div class="flex items-center gap-6 mb-4 md:mb-0">
+                    <div class="text-center">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-tighter">Status</p>
+                        <p class="text-emerald-400 font-bold">Produktiv</p>
+                    </div>
+                    <div class="w-px h-8 bg-slate-700"></div>
+                    <div class="text-center">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-tighter">Version</p>
+                        <p class="text-white font-bold">v3.0</p>
+                    </div>
+                </div>
+                <p id="last-login" class="text-sm font-mono text-indigo-400 bg-indigo-500/10 px-4 py-2 rounded-full">--:--:--</p>
             </div>
         </div>
     </div>
@@ -145,51 +288,23 @@
         function login() {
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
-            if(!e || !p) return showError("Bitte alles ausfüllen!");
-            auth.signInWithEmailAndPassword(e, p).catch(err => showError("Login fehlgeschlagen: " + err.message));
+            if(!e || !p) return showError("Bitte Felder ausfüllen!");
+            auth.signInWithEmailAndPassword(e, p).catch(err => showError("Fehler: " + err.message));
         }
 
         function register() {
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
-            if(!e || !p) return showError("Bitte alles ausfüllen!");
+            if(!e || !p) return showError("Bitte Felder ausfüllen!");
 
             auth.createUserWithEmailAndPassword(e, p).then(res => {
                 db.ref('users/' + res.user.uid).set({
-                    profile: { 
-                        name: e.split('@')[0], 
-                        email: e,
-                        joined: Date.now()
-                    },
-                    apps: { 
-                        focusFlow: { 
-                            stats: { lifetimeSeconds: 0 } 
-                        } 
-                    }
+                    profile: { name: e.split('@')[0], email: e, joined: Date.now() }
                 });
-            }).catch(err => showError("Registrierung fehlgeschlagen: " + err.message));
+            }).catch(err => showError("Fehler: " + err.message));
         }
 
         function logout() { auth.signOut(); }
-
-        // Live-Profil Synchronisation
-        function syncProfile(uid) {
-            const userRef = db.ref('users/' + uid);
-            
-            userRef.on('value', snapshot => {
-                const data = snapshot.val();
-                if (!data) return;
-
-                const name = data.profile?.name || "User";
-                const focusSeconds = data.apps?.focusFlow?.stats?.lifetimeSeconds || 0;
-                
-                // UI Updates
-                document.getElementById('user-welcome').innerText = `Willkommen zurück, ${name}!`;
-                document.getElementById('user-initials').innerText = name.substring(0, 2).toUpperCase();
-                document.getElementById('total-stats').innerText = `${Math.floor(focusSeconds / 60)}m ${focusSeconds % 60}s`;
-                document.getElementById('last-login').innerText = new Date().toLocaleTimeString();
-            });
-        }
 
         auth.onAuthStateChanged(user => {
             const card = document.getElementById('auth-card');
@@ -198,7 +313,10 @@
             if (user) {
                 card.classList.add('hidden');
                 dash.classList.remove('hidden');
-                syncProfile(user.uid);
+                const name = user.email.split('@')[0];
+                document.getElementById('user-welcome').innerText = `Willkommen zurück, ${name}!`;
+                document.getElementById('user-initials').innerText = name.substring(0, 2).toUpperCase();
+                document.getElementById('last-login').innerText = `Session Start: ${new Date().toLocaleTimeString()}`;
             } else {
                 card.classList.remove('hidden');
                 dash.classList.add('hidden');
